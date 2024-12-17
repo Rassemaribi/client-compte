@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Gestion des Comptes et Etudiants</title>
-    <!-- Intégration de Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Navbar</title>
+    <!-- Liens Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Qj8zSffr0yvu6jFq09T7XAYRROGTBYMstqBzcn8cq2IHuVDbR6m+QVknCw1cHHnu" crossorigin="anonymous">
 </head>
-<body class="bg-light">
+<body>
+<!-- Fragment de la barre de navigation -->
+<div th:fragment="navbarFragment">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/compte/}">Comptes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/clients/}">Clients</a>
+                </li>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Gestion des Comptes</a>
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/compte}">Comptes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/students}">Étudiants</a>
-                </li>
             </ul>
         </div>
     </nav>
-
-    <!-- Contenu spécifique à chaque page -->
-    <div class="container mt-5">
-        <div th:replace="${body}"></div>
-    </div>
-
-    <!-- Intégration des scripts Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+<!-- Liens JavaScript Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-csAOcXWfSPjfWfBs2myEGOq5p5q0Yz7rtGlkFU2kLsG6Vo/nczgVWwrHgpFggS9f" crossorigin="anonymous"></script>
 </body>
 </html>

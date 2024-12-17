@@ -7,19 +7,19 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import tn.iit.dto.StudentDto;
+import tn.iit.dto.ClientDto;
 @Service
-public class StudentService {
-private List<StudentDto> students = new ArrayList<>();
+public class ClientService {
+private List<ClientDto> students = new ArrayList<>();
 
-public StudentService() {
-	students.add(new StudentDto(1,"Wiem" , "MILEDI"));
+public ClientService() {
+	students.add(new ClientDto(1,"Wiem" , "MILEDI"));
 }
 	
-public void save(StudentDto studentdto) {
+public void save(ClientDto studentdto) {
 	students.add(studentdto);
 }
-public List<StudentDto> findAll(){
+public List<ClientDto> findAll(){
 	return students;
 }
 
@@ -28,20 +28,20 @@ public void deleteById(int id) {
 	students.removeIf(s->s.getId()== id);
 }
 // Méthode pour rechercher des étudiants par prénom ou nom
-public List<StudentDto> findByName(String key) {
+public List<ClientDto> findByName(String key) {
     return students.stream()
             .filter(student -> student.getFirstName().equalsIgnoreCase(key) || 
                                student.getLastName().equalsIgnoreCase(key))
             .collect(Collectors.toList());
 }
 
-public Optional<StudentDto> findByid(int id) {
+public Optional<ClientDto> findByid(int id) {
 	return students.stream().filter(s->s.getId()== id).findFirst();
 	
 }
 
 
-public void update(StudentDto studentDto) {
+public void update(ClientDto studentDto) {
 	students.set(students.indexOf(studentDto), studentDto);
 	
 }

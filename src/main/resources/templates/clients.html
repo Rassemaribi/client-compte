@@ -2,74 +2,118 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Gestion des Étudiants</title>
+    <title>Gestion des Clients</title>
     <!-- Intégration de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Intégration de SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-light">
-    <div class="container mt-5">
-        <!-- Section d'ajout d'un étudiant -->
-        <h1 class="mb-4">Ajouter un nouvel étudiant</h1>
-        <form th:action="@{save}" method="post" class="card p-4 shadow-sm">
-            <div class="mb-3">
-                <label for="id" class="form-label">ID</label>
-                <input type="text" id="id" name="id" class="form-control" placeholder="Entrez l'ID">
-            </div>
-            <div class="mb-3">
-                <label for="firstName" class="form-label">Prénom</label>
-                <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Entrez le prénom">
-            </div>
-            <div class="mb-3">
-                <label for="lastName" class="form-label">Nom</label>
-                <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Entrez le nom">
-            </div>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </form>
+<!-- Inclusion de la barre de navigation -->
+<div th:replace="navbar :: navbarFragment"></div>
+<div class="container mt-5">
+    <!-- Section d'ajout d'un client -->
+    <h1 class="mb-4">Ajouter un nouveau client</h1>
+    <form th:action="@{/clients/save}" method="post" class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label for="id" class="form-label">ID</label>
+            <input type="text" id="id" name="id" class="form-control" placeholder="Entrez l'ID">
+        </div>
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Prénom</label>
+            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Entrez le prénom">
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Nom</label>
+            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Entrez le nom">
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
 
-        <!-- Section de recherche -->
-        <h1 class="mt-5 mb-4">Liste des étudiants</h1>
-        <form th:action="@{search}" method="post" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="key" class="form-control" placeholder="Rechercher un étudiant par nom">
-                <button class="btn btn-outline-primary" type="submit">Rechercher</button>
-            </div>
-        </form>
+    <!-- Section de recherche -->
+    <h1 class="mt-5 mb-4">Liste des clients</h1>
+    <form th:action="@{/clients/search}" method="post" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="key" class="form-control" placeholder="Rechercher un client par nom">
+            <button class="btn btn-outline-primary" type="submit">Rechercher</button>
+        </div>
+    </form>
 
-        <!-- Tableau des étudiants -->
-        <table class="table table-bordered table-hover shadow-sm bg-white">
-            <thead class="table-primary">
-                <tr>
-                    <th>ID</th>
-                    <th>Prénom</th>
-                    <th>Nom</th>
-                    <th>Supprimer</th>
-                    <th>Modifier</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="student : ${students}">
-                    <td th:text="${student.id}"></td>
-                    <td th:text="${student.firstName}"></td>
-                    <td th:text="${student.lastName}"></td>
-                    <td>
-                        <a th:href="'/students/delete/' + ${student.id}" class="btn btn-danger btn-sm">Supprimer</a>
-                    </td>
-                    <td>
-                        <form th:action="@{edit}" method="post">
-                            <input type="hidden" name="id" th:value="${student.id}" />
-                            <button type="submit" class="btn btn-warning btn-sm">Modifier</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Tableau des clients -->
+    <table class="table table-bordered table-hover shadow-sm bg-white">
+        <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Prénom</th>
+            <th>Nom</th>
+            <th>supprimer</th>
+            <th>modifier</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client : ${clients}">
+            <td th:text="${client.id}"></td>
+            <td th:text="${client.firstName}"></td>
+            <td th:text="${client.lastName}"></td>
 
-        <h2 class="text-muted" th:text="${date}"></h2>
-    </div>
+            <td>
+            <button class="btn btn-danger btn-sm delete-btn" th:data-id="${client.id}">Supprimer</button>
+            </td>
 
-    <!-- Intégration des scripts Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <td>
+                <form th:action="@{/clients/edit}" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${client.id}" />
+                    <button type="submit" class="btn btn-warning btn-sm">Modifier</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Intégration des scripts Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Script pour suppression avec SweetAlert et AJAX -->
+<script>
+    document.querySelectorAll('.delete-btn').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            const id = button.getAttribute('data-id'); // Récupérer l'ID du client
+
+            // Afficher une confirmation avec SweetAlert
+            Swal.fire({
+                title: "Êtes-vous sûr ?",
+                text: "Cette action est irréversible.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Oui, supprimer !",
+                cancelButtonText: "Annuler",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Requête AJAX pour supprimer le client
+                    fetch(`/clients/delete/${id}`, { method: "DELETE" })
+                        .then(response => {
+                            if (response.ok) {
+                                // Supprimer la ligne du tableau
+                                button.closest('tr').remove();
+
+                                // Notification de succès
+                                Swal.fire("Supprimé !", "Le client a été supprimé avec succès.", "success");
+                            } else {
+                                Swal.fire("Erreur !", "Le client n'a pas été trouvé.", "error");
+                            }
+                        })
+                        .catch(() => {
+                            Swal.fire("Erreur !", "Impossible de contacter le serveur.", "error");
+                        });
+                }
+            });
+        });
+    });
+
+</script>
+
 </body>
-
 </html>

@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class StudentDto {
+public class ClientDto {
 	@Include
 	private int id;
 	private String  firstName;

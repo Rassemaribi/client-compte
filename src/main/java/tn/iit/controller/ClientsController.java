@@ -52,9 +52,10 @@ public class ClientsController {
 
 
 	@PostMapping("/search")
-	public ResponseEntity<List<ClientDto>> searchClients(@RequestParam String key) {
+	public String searchClients(@RequestParam String key, Model model) {
 		List<ClientDto> clients = service.findByName(key);
-		return ResponseEntity.ok(clients);
+		model.addAttribute("clients", clients); // Ajouter la liste des clients au modèle
+		return "clients"; // Retourner le nom de la vue Thymeleaf
 	}
 
 	@PostMapping("/edit")

@@ -30,7 +30,7 @@
     <h1 class="mt-5 mb-4 text-center">Liste des Comptes</h1>
     <form th:action="@{/compte/search}" method="post" class="mb-4">
         <div class="input-group">
-            <input type="text" name="key" class="form-control" placeholder="Rechercher un compte par nom de client" th:value="${key}" required>
+            <input type="text" name="key" class="form-control" placeholder="Rechercher un compte par nom">
             <button class="btn btn-outline-primary" type="submit">Rechercher</button>
         </div>
     </form>
@@ -128,5 +128,56 @@
         });
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.querySelector('input[name="key"]');
+        const suggestionsBox = document.createElement('div');
+        suggestionsBox.classList.add('autocomplete-suggestions');
+        searchInput.parentNode.appendChild(suggestionsBox);
+
+        searchInput.addEventListener('input', function() {
+            const term = searchInput.value;
+            if (term.length < 2) {
+                suggestionsBox.innerHTML = '';
+                return;
+            }
+
+            fetch(`/compte/autocomplete?term=${term}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsBox.innerHTML = '';
+                    data.forEach(item => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('autocomplete-suggestion');
+                        suggestionItem.textContent = item;
+                        suggestionItem.addEventListener('click', function() {
+                            searchInput.value = item;
+                            suggestionsBox.innerHTML = '';
+                        });
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                });
+        });
+    });
+</script>
+<style>
+    .autocomplete-suggestions {
+        border: 1px solid #ccc;
+        max-height: 150px;
+        overflow-y: auto;
+        position: absolute;
+        background-color: white;
+        z-index: 1000;
+    }
+
+    .autocomplete-suggestion {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .autocomplete-suggestion:hover {
+        background-color: #e9e9e9;
+    }
+</style>
 </body>
 </html>

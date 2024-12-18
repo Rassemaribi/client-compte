@@ -53,7 +53,11 @@ public class CompteController {
 	    return "comptes"; // Recharge la vue avec les résultats
 	}
 
-
+	@GetMapping("/autocomplete")
+	@ResponseBody
+	public List<String> autocomplete(@RequestParam String term) {
+		return service.findAccountNamesByTerm(term);
+	}
 
 	// Charger les informations d'un compte pour modification
 	@GetMapping("/edit/{rib}")

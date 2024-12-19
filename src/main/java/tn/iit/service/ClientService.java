@@ -10,39 +10,47 @@ import org.springframework.stereotype.Service;
 import tn.iit.dto.ClientDto;
 @Service
 public class ClientService {
-private List<ClientDto> students = new ArrayList<>();
+	private List<ClientDto> students = new ArrayList<>();
 
-public ClientService() {
-	students.add(new ClientDto(1,"Wiem" , "MILEDI"));
-}
-	
-public void save(ClientDto studentdto) {
-	students.add(studentdto);
-}
-public List<ClientDto> findAll(){
-	return students;
-}
+	public ClientService() {
+		students.add(new ClientDto(1,"Wiem" , "MILEDI"));
+	}
 
-public void deleteById(int id) {
-	// TODO Auto-generated method stub
-	students.removeIf(s->s.getId()== id);
-}
-// Méthode pour rechercher des étudiants par prénom ou nom
-public List<ClientDto> findByName(String key) {
-    return students.stream()
-            .filter(student -> student.getFirstName().equalsIgnoreCase(key) || 
-                               student.getLastName().equalsIgnoreCase(key))
-            .collect(Collectors.toList());
-}
+	public void save(ClientDto studentdto) {
+		students.add(studentdto);
+	}
+	public List<ClientDto> findAll(){
+		return students;
+	}
 
-public Optional<ClientDto> findByid(int id) {
-	return students.stream().filter(s->s.getId()== id).findFirst();
-	
-}
+	public void deleteById(int id) {
+		// TODO Auto-generated method stub
+		students.removeIf(s->s.getId()== id);
+	}
+	// Méthode pour rechercher des étudiants par prénom ou nom
+	public List<ClientDto> findByName(String key) {
+		return students.stream()
+				.filter(student -> student.getFirstName().equalsIgnoreCase(key) ||
+						student.getLastName().equalsIgnoreCase(key))
+				.collect(Collectors.toList());
+	}
+
+	public Optional<ClientDto> findByid(int id) {
+		return students.stream().filter(s->s.getId()== id).findFirst();
+
+	}
 
 
-public void update(ClientDto studentDto) {
-	students.set(students.indexOf(studentDto), studentDto);
-	
-}
-}
+	public void update(ClientDto studentDto) {
+		students.set(students.indexOf(studentDto), studentDto);
+
+	}
+	// src/main/java/tn/iit/service/ClientService.java
+	// In ClientService.java
+	public List<String> findClientName(String term) {
+		return students.stream()
+				.filter(student -> student.getFirstName().toLowerCase().contains(term.toLowerCase()) ||
+						student.getLastName().toLowerCase().contains(term.toLowerCase()))
+				.map(student -> student.getFirstName() + " " + student.getLastName())
+				.collect(Collectors.toList());
+	}}

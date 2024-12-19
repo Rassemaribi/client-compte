@@ -7,13 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.AllArgsConstructor;
 import tn.iit.dto.ClientDto;
@@ -57,7 +51,14 @@ public class ClientsController {
 		model.addAttribute("clients", clients); // Ajouter la liste des clients au modèle
 		return "clients"; // Retourner le nom de la vue Thymeleaf
 	}
-
+	// src/main/java/tn/iit/controller/ClientsController.java
+	// src/main/java/tn/iit/controller/ClientsController.java
+	// In ClientsController.java
+	@GetMapping("/autocomplete")
+	@ResponseBody
+	public List<String> autocomplete(@RequestParam String term) {
+		return service.findClientName(term);
+	}
 	@PostMapping("/edit")
 	public String edit(@RequestParam("id") int id, Model model) {
 

@@ -26,13 +26,13 @@ public class ClientsController {
 	}
 
 	@PostMapping("/save")
-	public String save(@RequestParam("id") int id, @RequestParam("firstName") String firstName,
+	public String save(@RequestParam("firstName") String firstName,
 					   @RequestParam("lastName") String lastName) {
-		ClientDto clientDto = new ClientDto(id, firstName, lastName);
+		ClientDto clientDto = new ClientDto(0, firstName, lastName); // L'ID est ignoré ici
 		service.save(clientDto);
 		return "redirect:/clients/";
-
 	}
+
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
@@ -51,14 +51,12 @@ public class ClientsController {
 		model.addAttribute("clients", clients); // Ajouter la liste des clients au modèle
 		return "clients"; // Retourner le nom de la vue Thymeleaf
 	}
-	// src/main/java/tn/iit/controller/ClientsController.java
-	// src/main/java/tn/iit/controller/ClientsController.java
-	// In ClientsController.java
 	@GetMapping("/autocomplete")
 	@ResponseBody
 	public List<String> autocomplete(@RequestParam String term) {
-		return service.findClientName(term);
+		return service.findClientFirstNameByFirstName(term); // Recherche par prénom uniquement
 	}
+
 	@PostMapping("/edit")
 	public String edit(@RequestParam("id") int id, Model model) {
 

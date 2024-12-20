@@ -1,56 +1,70 @@
 package tn.iit.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
+import tn.iit.dao.ClientRepository;
 import tn.iit.dto.ClientDto;
+import tn.iit.entity.Client;
+
+
 @Service
+@AllArgsConstructor
 public class ClientService {
-	private List<ClientDto> students = new ArrayList<>();
+	private final ClientRepository clientRepository;
 
-	public ClientService() {
-		students.add(new ClientDto(1,"Wiem" , "MILEDI"));
+	public void save(ClientDto clientDto) {
+		Client client = new Client();
+		client.setFirstName(clientDto.getFirstName());
+		client.setLastName(clientDto.getLastName());
+		clientRepository.save(client); // L'ID sera généré automatiquement
 	}
 
-	public void save(ClientDto studentdto) {
-		students.add(studentdto);
-	}
-	public List<ClientDto> findAll(){
-		return students;
+	public List<ClientDto> findAll() {
+		return clientRepository.findAll().stream()
+				.map(client -> new ClientDto(client.getId(), client.getFirstName(), client.getLastName()))
+				.toList();
 	}
 
 	public void deleteById(int id) {
-		// TODO Auto-generated method stub
-		students.removeIf(s->s.getId()== id);
+		clientRepository.deleteById(id);
 	}
-	// Méthode pour rechercher des étudiants par prénom ou nom
+
 	public List<ClientDto> findByName(String key) {
-		return students.stream()
-				.filter(student -> student.getFirstName().equalsIgnoreCase(key) ||
-						student.getLastName().equalsIgnoreCase(key))
-				.collect(Collectors.toList());
+		return clientRepository.findAll().stream()
+				.filter(client -> client.getFirstName().equalsIgnoreCase(key) ||
+						client.getLastName().equalsIgnoreCase(key))
+				.map(client -> new ClientDto(client.getId(), client.getFirstName(), client.getLastName()))
+				.toList();
 	}
 
 	public Optional<ClientDto> findByid(int id) {
-		return students.stream().filter(s->s.getId()== id).findFirst();
+		return clientRepository.findById(id).map(client ->
+				new ClientDto(client.getId(), client.getFirstName(), client.getLastName()));
+	}
 
+	public void update(ClientDto clientDto) {
+		Optional<Client> existingClientOpt = clientRepository.findById(clientDto.getId());
+		if (existingClientOpt.isPresent()) {
+			Client existingClient = existingClientOpt.get();
+			existingClient.setFirstName(clientDto.getFirstName());
+			existingClient.setLastName(clientDto.getLastName());
+			clientRepository.save(existingClient);
+		}
 	}
 
 
-	public void update(ClientDto studentDto) {
-		students.set(students.indexOf(studentDto), studentDto);
-
-	}
-	// src/main/java/tn/iit/service/ClientService.java
-	// In ClientService.java
-	public List<String> findClientName(String term) {
-		return students.stream()
-				.filter(student -> student.getFirstName().toLowerCase().contains(term.toLowerCase()) ||
-						student.getLastName().toLowerCase().contains(term.toLowerCase()))
-				.map(student -> student.getFirstName() + " " + student.getLastName())
+	public List<String> findClientFirstNameByFirstName(String term) {
+		return clientRepository.findAll().stream()
+				.filter(client -> client.getFirstName().toLowerCase().contains(term.toLowerCase())) // Recherche par prénom uniquement
+				.map(client -> client.getFirstName()) // Retourne seulement le prénom
 				.collect(Collectors.toList());
-	}}
+	}
+
+
+
+}

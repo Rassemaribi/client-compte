@@ -1,8 +1,6 @@
 package tn.iit.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -10,20 +8,19 @@ import jakarta.persistence.Table;
 @Table(name = "t_clients") // Table dans la base de données
 public class Client {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Génération automatique
-    private int id;
+    private String cin; // Champ "cin" comme identifiant unique
 
     private String firstName;
 
     private String lastName;
 
     // Getters et Setters
-    public int getId() {
-        return id;
+    public String getCin() {
+        return cin;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCin(String cin) {
+        this.cin = cin;
     }
 
     public String getFirstName() {

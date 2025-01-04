@@ -2,6 +2,7 @@ package tn.iit.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.AllArgsConstructor;
+import tn.iit.dto.ClientDto;
 import tn.iit.entity.Compte;
 import tn.iit.service.CompteService;
 
@@ -17,6 +19,7 @@ import tn.iit.service.CompteService;
 @RequestMapping("/compte")
 public class CompteController {
 
+	@Autowired
 	private final CompteService service;
 
 	// Afficher tous les comptes
@@ -28,9 +31,8 @@ public class CompteController {
 
 	// Enregistrer un nouveau compte
 	@PostMapping("/save")
-	public String save(@RequestParam String nomClient, @RequestParam float solde) {
-		// Si 'dorra' est un champ obligatoire, assurez-vous de l'ajouter ici
-		Compte compteEntity = new Compte(nomClient, solde); // Ajoutez 'dorra' si nécessaire
+	public String save(@RequestParam String nomClient, @RequestParam float solde, @RequestParam String cin) {
+		Compte compteEntity = new Compte(nomClient, solde, cin);
 		service.saveOrUpdate(compteEntity);
 		return "redirect:/compte/"; // Redirection après l'enregistrement
 	}
@@ -48,9 +50,9 @@ public class CompteController {
 
 	@PostMapping("/search")
 	public String searchCompte(@RequestParam String key, Model model) {
-	    List<Compte> comptes = service.findAllByKey(key);
-	    model.addAttribute("comptes", comptes);
-	    return "comptes"; // Recharge la vue avec les résultats
+		List<Compte> comptes = service.findAllByKey(key);
+		model.addAttribute("comptes", comptes);
+		return "comptes"; // Recharge la vue avec les résultats
 	}
 
 	@GetMapping("/autocomplete")
@@ -73,4 +75,21 @@ public class CompteController {
 		service.saveOrUpdate(compteEntity);
 		return "redirect:/compte/"; // Redirection après mise à jour
 	}
+
+	@GetMapping("/cin/autocomplete")
+	public ResponseEntity<List<String>> autocompleteCin(@RequestParam("term") String term) {
+		List<String> suggestions = service.findCinByTerm(term);
+		return ResponseEntity.ok(suggestions);
+	}
+
+	@GetMapping("/client/{cin}")
+	public ResponseEntity<String> getClientNameByCin(@PathVariable String cin) {
+		String nomClient = service.findClientNameByCin(cin);
+		if (nomClient != null) {
+			return ResponseEntity.ok(nomClient);
+		}
+		return ResponseEntity.notFound().build();
+	}
+
+
 }

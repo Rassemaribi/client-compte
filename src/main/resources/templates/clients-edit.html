@@ -14,8 +14,8 @@
     <!-- Formulaire de mise à jour -->
     <form th:action="@{/clients/update}" method="post" class="card p-4 shadow-sm">
         <div class="mb-3">
-            <label for="id" class="form-label">ID</label>
-            <input type="number" id="id" name="id" class="form-control" th:value="${client?.id}" readonly />
+            <label for="cin" class="form-label">CIN</label>
+            <input type="text" id="cin" name="cin" class="form-control" th:value="${client?.cin}" readonly />
         </div>
         <div class="mb-3">
             <label for="firstName" class="form-label">Prénom</label>

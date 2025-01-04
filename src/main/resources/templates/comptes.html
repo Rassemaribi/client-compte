@@ -15,9 +15,15 @@
     <!-- Section d'ajout d'un nouveau compte -->
     <h1 class="mb-4 text-center">Ajouter un nouveau compte</h1>
     <form th:action="@{/compte/save}" method="post" class="card p-4 shadow-sm">
+        <div class="mb-3 position-relative">
+            <label for="cin" class="form-label">CIN</label>
+            <input type="text" id="cin" name="cin" class="form-control" placeholder="Entrez le CIN" autocomplete="off" required>
+            <div id="cin-suggestions" class="autocomplete-suggestions"></div>
+        </div>
+
         <div class="mb-3">
             <label for="nomClient" class="form-label">Nom du Client</label>
-            <input type="text" id="nomClient" name="nomClient" class="form-control" placeholder="Entrez le nom du client" required>
+            <input type="text" id="nomClient" name="nomClient" class="form-control" placeholder="Le nom du client sera rempli automatiquement" readonly>
         </div>
         <div class="mb-3">
             <label for="solde" class="form-label">Solde</label>
@@ -25,6 +31,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
+
 
     <!-- Section de recherche -->
     <h1 class="mt-5 mb-4 text-center">Liste des Comptes</h1>
@@ -46,6 +53,7 @@
             <thead class="table-primary">
             <tr>
                 <th>RIB</th>
+                <th>CIN</th>
                 <th>Nom du Client</th>
                 <th>Solde</th>
                 <th>Supprimer</th>
@@ -56,6 +64,7 @@
             <!-- Itération sur la liste des comptes -->
             <tr th:each="compte : ${comptes}" th:id="'compte-' + ${compte.rib}">
                 <td th:text="${compte.rib}"></td>
+                <td th:text="${compte.cin}"></td>
                 <td th:text="${compte.nomClient}"></td>
                 <td th:text="${compte.solde}"></td>
                 <td>
@@ -160,6 +169,69 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const cinInput = document.querySelector('#cin');
+        const nomClientInput = document.querySelector('#nomClient');
+        const suggestionsBox = document.querySelector('#cin-suggestions');
+
+        // Écouteur pour les entrées dans le champ CIN
+        cinInput.addEventListener('input', function () {
+            const term = cinInput.value.trim();
+            if (term.length < 2) {
+                suggestionsBox.innerHTML = '';
+                return;
+            }
+
+            // Requête pour obtenir les suggestions
+            fetch(`/compte/cin/autocomplete?term=${term}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsBox.innerHTML = '';
+                    data.forEach(item => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.classList.add('autocomplete-suggestion');
+                        suggestionItem.textContent = item;
+
+                        // Quand une suggestion est sélectionnée
+                        suggestionItem.addEventListener('click', function () {
+                            cinInput.value = item; // Met à jour le champ CIN
+                            suggestionsBox.innerHTML = ''; // Vide les suggestions
+
+                            // Requête pour récupérer le nom du client
+                            fetch(`/compte/client/${item}`)
+                                .then(response => {
+                                    if (response.ok) return response.text();
+                                    throw new Error('Client non trouvé.');
+                                })
+                                .then(nomClient => {
+                                    nomClientInput.value = nomClient; // Met à jour le champ Nom du Client
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    nomClientInput.value = ''; // Réinitialise en cas d'erreur
+                                    alert('Aucun client trouvé avec ce CIN.');
+                                });
+                        });
+
+                        suggestionsBox.appendChild(suggestionItem);
+                    });
+                })
+                .catch(() => {
+                    console.error('Erreur lors de la récupération des suggestions.');
+                });
+        });
+
+        // Cacher les suggestions si l'utilisateur clique ailleurs
+        document.addEventListener('click', function (e) {
+            if (!suggestionsBox.contains(e.target) && e.target !== cinInput) {
+                suggestionsBox.innerHTML = '';
+            }
+        });
+    });
+
+</script>
 <style>
     .autocomplete-suggestions {
         border: 1px solid #ccc;
@@ -179,5 +251,26 @@
         background-color: #e9e9e9;
     }
 </style>
+<style>
+    .autocomplete-suggestions {
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        background-color: white;
+        z-index: 1000;
+        width: 100%;
+    }
+
+    .autocomplete-suggestion {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .autocomplete-suggestion:hover {
+        background-color: #e9e9e9;
+    }
+</style>
+
 </body>
 </html>

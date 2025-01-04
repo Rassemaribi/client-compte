@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientDto {
-	private int id; // Peut être ignoré lors de l'ajout
+	private String cin; // Utilisation de "cin" comme identifiant unique
 	private String firstName;
 	private String lastName;
 }

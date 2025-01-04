@@ -20,6 +20,10 @@
     <h1 class="mb-4">Ajouter un nouveau client</h1>
     <form th:action="@{/clients/save}" method="post" class="card p-4 shadow-sm">
         <div class="mb-3">
+            <label for="cin" class="form-label">CIN</label>
+            <input type="text" id="cin" name="cin" class="form-control" placeholder="Entrez le CIN">
+        </div>
+        <div class="mb-3">
             <label for="firstName" class="form-label">Prénom</label>
             <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Entrez le prénom">
         </div>
@@ -39,12 +43,11 @@
         </div>
     </form>
 
-
     <!-- Tableau des clients -->
     <table class="table table-bordered table-hover shadow-sm bg-white">
         <thead class="table-primary">
         <tr>
-            <th>ID</th>
+            <th>CIN</th>
             <th>Prénom</th>
             <th>Nom</th>
             <th>supprimer</th>
@@ -53,17 +56,17 @@
         </thead>
         <tbody>
         <tr th:each="client : ${clients}">
-            <td th:text="${client.id}"></td>
+            <td th:text="${client.cin}"></td>
             <td th:text="${client.firstName}"></td>
             <td th:text="${client.lastName}"></td>
 
             <td>
-                <button class="btn btn-danger btn-sm delete-btn" th:data-id="${client.id}">Supprimer</button>
+                <button class="btn btn-danger btn-sm delete-btn" th:data-cin="${client.cin}">Supprimer</button>
             </td>
 
             <td>
                 <form th:action="@{/clients/edit}" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${client.id}" />
+                    <input type="hidden" name="cin" th:value="${client.cin}" />
                     <button type="submit" class="btn btn-warning btn-sm">Modifier</button>
                 </form>
             </td>
@@ -79,7 +82,7 @@
     document.querySelectorAll('.delete-btn').forEach(function (button) {
         button.addEventListener('click', function (e) {
             e.preventDefault();
-            const id = button.getAttribute('data-id'); // Récupérer l'ID du client
+            const cin = button.getAttribute('data-cin'); // Récupérer le CIN du client
 
             // Afficher une confirmation avec SweetAlert
             Swal.fire({
@@ -93,7 +96,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Requête AJAX pour supprimer le client
-                    fetch(`/clients/delete/${id}`, { method: "DELETE" })
+                    fetch(`/clients/delete/${cin}`, { method: "DELETE" })
                         .then(response => {
                             if (response.ok) {
                                 // Supprimer la ligne du tableau
@@ -138,8 +141,6 @@
         });
     });
 </script>
-
-
 
 </body>
 </html>

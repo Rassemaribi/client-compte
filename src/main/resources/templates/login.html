@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Se connecter</title>
+
+    <!-- Lien vers le CSS de Bootstrap pour un design professionnel -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Qj8zSffr0yvu6jFq09T7XAYRROGTBYMstqBzcn8cq2IHuVDbR6m+QVknCw1cHHnu" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(to right, #0062E6, #33AEFF);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .login-container:hover {
+            transform: translateY(-10px);
+        }
+        .login-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-family: 'Arial', sans-serif;
+        }
+        .form-control {
+            border-radius: 50px;
+            border: 2px solid #ddd;
+            padding: 15px;
+            transition: border-color 0.3s ease-in-out;
+        }
+        .form-control:focus {
+            border-color: #33AEFF;
+            box-shadow: 0 0 5px rgba(51, 174, 255, 0.5);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            background-color: #33AEFF;
+            border: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0062E6;
+        }
+        .forgot-password {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .forgot-password a {
+            color: #33AEFF;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .forgot-password a:hover {
+            color: #0062E6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Se connecter</h2>
+    <br>
+    <form action="/login" method="post">
+        <div class="mb-4">
+            <label for="username" class="form-label">Nom d'utilisateur :</label>
+            <input type="text" class="form-control" id="username" name="username" required />
+        </div>
+        <br>
+        <div class="mb-4">
+            <label for="password" class="form-label">Mot de passe &nbsp;  &nbsp; &nbsp; &nbsp;:</label>
+            <input type="password" class="form-control" id="password" name="password" required />
+        </div>
+        <br>
+        <div class="mb-4">
+            <button type="submit" class="btn btn-primary">Se connecter</button>
+        </div>
+        <div class="forgot-password">
+            <a href="#">Mot de passe oublié ?</a>
+        </div>
+    </form>
+</div>
+
+<!-- Liens vers le script Bootstrap pour le bon fonctionnement des composants -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-csAOcXWfSPjfWfBs2myEGOq5p5q0Yz7rtGlkFU2kLsG6Vo/nczgVWwrHgpFggS9f" crossorigin="anonymous"></script>
+</body>
+</html>

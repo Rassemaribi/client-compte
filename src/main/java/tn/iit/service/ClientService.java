@@ -63,4 +63,6 @@ public class ClientService {
 				.map(Client::getFirstName) // Retourne seulement le prénom
 				.collect(Collectors.toList());
 	}
+
+
 }

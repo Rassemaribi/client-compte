@@ -38,4 +38,8 @@ public class Client {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public String getNomClient() {
+        return firstName + " " + lastName;
+    }
 }

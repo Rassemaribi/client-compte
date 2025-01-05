@@ -22,6 +22,7 @@ public class Compte implements Serializable /* obligatoire selon JPA */ {
 
 	private static final long serialVersionUID = 1L;
 
+
 	@Id // rib --> PK
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
 	@Include // equals et hashCode générés à base du RIB
@@ -32,12 +33,11 @@ public class Compte implements Serializable /* obligatoire selon JPA */ {
 
 	private float solde;
 
-	@Column(name = "cin")
-	private String cin;
 
 	@ManyToOne
-	@JoinColumn(name = "client_cin", insertable = false, updatable = false)
+	@JoinColumn(name = "cin", insertable = false, updatable = false)
 	private Client client;
+	private  String cin;
 
 	// Constructeur
 	public Compte(String nomClient, float solde, String cin) {

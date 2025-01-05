@@ -23,7 +23,7 @@
 
         <div class="mb-3">
             <label for="nomClient" class="form-label">Nom du Client</label>
-            <input type="text" id="nomClient" name="nomClient" class="form-control" placeholder="Le nom du client sera rempli automatiquement" readonly>
+            <input type="text" id="nomClient" name="nomClient" class="form-control" placeholder="Entrez le nom du client">
         </div>
         <div class="mb-3">
             <label for="solde" class="form-label">Solde</label>
@@ -176,7 +176,6 @@
         const nomClientInput = document.querySelector('#nomClient');
         const suggestionsBox = document.querySelector('#cin-suggestions');
 
-        // Écouteur pour les entrées dans le champ CIN
         cinInput.addEventListener('input', function () {
             const term = cinInput.value.trim();
             if (term.length < 2) {
@@ -184,7 +183,6 @@
                 return;
             }
 
-            // Requête pour obtenir les suggestions
             fetch(`/compte/cin/autocomplete?term=${term}`)
                 .then(response => response.json())
                 .then(data => {
@@ -194,43 +192,36 @@
                         suggestionItem.classList.add('autocomplete-suggestion');
                         suggestionItem.textContent = item;
 
-                        // Quand une suggestion est sélectionnée
                         suggestionItem.addEventListener('click', function () {
-                            cinInput.value = item; // Met à jour le champ CIN
-                            suggestionsBox.innerHTML = ''; // Vide les suggestions
-
-                            // Requête pour récupérer le nom du client
+                            cinInput.value = item;
+                            suggestionsBox.innerHTML = '';
                             fetch(`/compte/client/${item}`)
                                 .then(response => {
                                     if (response.ok) return response.text();
                                     throw new Error('Client non trouvé.');
                                 })
                                 .then(nomClient => {
-                                    nomClientInput.value = nomClient; // Met à jour le champ Nom du Client
+                                    nomClientInput.value = nomClient;
                                 })
                                 .catch(error => {
                                     console.error(error);
-                                    nomClientInput.value = ''; // Réinitialise en cas d'erreur
-                                    alert('Aucun client trouvé avec ce CIN.');
+                                    nomClientInput.value = '';
+                                    alert('Aucun client trouvé avec ce CIN. Veuillez entrer le nom manuellement.');
                                 });
                         });
 
                         suggestionsBox.appendChild(suggestionItem);
                     });
                 })
-                .catch(() => {
-                    console.error('Erreur lors de la récupération des suggestions.');
-                });
+                .catch(() => console.error('Erreur lors de la récupération des suggestions.'));
         });
 
-        // Cacher les suggestions si l'utilisateur clique ailleurs
         document.addEventListener('click', function (e) {
             if (!suggestionsBox.contains(e.target) && e.target !== cinInput) {
                 suggestionsBox.innerHTML = '';
             }
         });
     });
-
 </script>
 <style>
     .autocomplete-suggestions {

@@ -96,7 +96,8 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Requête AJAX pour supprimer le client
-                    fetch(`/clients/delete/${cin}`, { method: "DELETE" })
+                    fetch(`/clients/delete/
+                    {cin}`, { method: "DELETE" })
                         .then(response => {
                             if (response.ok) {
                                 // Supprimer la ligne du tableau
